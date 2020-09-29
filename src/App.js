@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import Post from "./Post";
-
+import NewPost from "./NewPost";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 
@@ -65,9 +65,13 @@ function App() {
   }, [user, username]);
 
   useEffect(() => {
-    db.collection("posts").onSnapshot((snapshot) => {
-      setPosts(snapshot.docs.map((doc) => ({ id: doc.id, post: doc.data() })));
-    });
+    db.collection("posts")
+      .orderBy("timestamp", "desc")
+      .onSnapshot((snapshot) => {
+        setPosts(
+          snapshot.docs.map((doc) => ({ id: doc.id, post: doc.data() }))
+        );
+      });
   }, []);
 
   const signUp = (e) => {
@@ -89,6 +93,12 @@ function App() {
 
   return (
     <div className="App">
+      {user?.displayName ? (
+        <NewPost username={user.displayName} />
+      ) : (
+        <h3>Please login to create a new post.</h3>
+      )}
+
       <Modal open={openSignUpModal} onClose={() => setOpenSignUpModal(false)}>
         <div style={modalStyle} className={classes.paper}>
           <form className="app__signup">
