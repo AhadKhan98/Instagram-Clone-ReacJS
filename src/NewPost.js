@@ -5,7 +5,7 @@ import { storage, db } from "./firebase";
 import firebase from "firebase";
 import "./NewPost.css";
 
-function NewPost({ username }) {
+function NewPost({ setNewPostModal, username }) {
   const [caption, setCaption] = useState("");
   const [image, setImage] = useState(null);
   const [progress, setProgress] = useState(0);
@@ -45,14 +45,17 @@ function NewPost({ username }) {
             setCaption("");
             setImage(null);
           });
+        setNewPostModal(false);
       }
     );
   };
 
   return (
-    <div>
-      <progress value={progress} max="100" />
+    <div className="newPost">
+      <h5>Add a New Post</h5>
+      <progress className="newPost__progressbar" value={progress} max="100" />
       <input
+        className="newPost__caption"
         type="text"
         onChange={(e) => setCaption(e.target.value)}
         value={caption}
